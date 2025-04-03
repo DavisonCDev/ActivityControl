@@ -1,11 +1,12 @@
 package com.oksmart.activitycontrol.model;
 
-import lombok.Data;
 import jakarta.persistence.Entity;
+import lombok.Data;
+
 import jakarta.persistence.Id;
 
 @Data
-@Entity
+
 public class Activity {
 
     @Id
@@ -14,15 +15,17 @@ public class Activity {
     private Integer linha;
     private Integer endereco;
     private String tipo;
+    private String descritivo;
 
     public Activity() {}
 
-    public Activity(String cliente, Integer central, Integer linha, Integer endereco, String tipo) {
+    public Activity(String cliente, Integer central, Integer linha, Integer endereco, String tipo, String descritivo) {
         this.cliente = cliente;
         this.central = central;
         this.linha = linha;
         this.endereco = endereco;
         this.tipo = tipo;
+        this.descritivo = descritivo;
     }
 
     public String getCliente() {
@@ -63,5 +66,13 @@ public class Activity {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    public String getDescritivo() {
+        return descritivo;
+    }
+
+    public void setDescritivo(String tipo) {
+        this.descritivo = tipo;
     }
 }

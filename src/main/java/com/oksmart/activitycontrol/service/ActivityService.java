@@ -1,7 +1,7 @@
 package com.oksmart.activitycontrol.service;
 
 import com.oksmart.activitycontrol.model.Activity;
-import com.oksmart.activitycontrol.repository.ActivityRepository;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,6 @@ import java.util.List;
 @Service
 public class ActivityService {
 
-    @Autowired
-    private ActivityRepository activityRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -48,8 +46,9 @@ public class ActivityService {
                     Integer linha = (int) row.getCell(2).getNumericCellValue();
                     Integer endereco = (int) row.getCell(3).getNumericCellValue();
                     String tipo = row.getCell(4).getStringCellValue();
+                    String descritivo = row.getCell(5).getStringCellValue();
 
-                    Activity activity = new Activity(cliente, central, linha, endereco, tipo);
+                    Activity activity = new Activity(cliente, central, linha, endereco, tipo, descritivo);
                     activities.add(activity);
 
                     criarTabelaSeNecessario(cliente);
@@ -81,7 +80,8 @@ public class ActivityService {
                     + "central INT, "
                     + "linha INT, "
                     + "endereco INT, "
-                    + "tipo VARCHAR(255)"
+                    + "tipo VARCHAR(255), "
+                    + "descritivo VARCHAR(255) "
                     + ")";
             jdbcTemplate.execute(createTableSql);
             System.out.println("Tabela criada para o cliente: " + clienteTabela);
@@ -92,9 +92,12 @@ public class ActivityService {
 
     private void salvarDadosNaTabela(String cliente, Activity activity) {
         String clienteTabela = cliente.replaceAll("\\s+", "_"); // Substitui espaços por underline
-        String insertSql = "INSERT INTO `" + clienteTabela + "` (cliente, central, linha, endereco, tipo) "
-                + "VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(insertSql, activity.getCliente(), activity.getCentral(), activity.getLinha(), activity.getEndereco(), activity.getTipo());
+        String insertSql = "INSERT INTO `" + clienteTabela + "` (cliente, central, linha, endereco, tipo, descritivo) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(insertSql,
+                activity.getCliente(), activity.getCentral(),
+                activity.getLinha(), activity.getEndereco(),
+                activity.getTipo(), activity.getDescritivo());
         System.out.println("Atividade salva na tabela " + clienteTabela);
     }
 }
